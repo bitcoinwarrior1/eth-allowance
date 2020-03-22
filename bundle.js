@@ -6,6 +6,10 @@ const approvalHash = "0x095ea7b3";
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    web3.eth.requestAccounts().then((accounts) => {
+        init();
+    });
+
     function init() {
         web3.eth.getChainId().then((chainId) => {
             return chainId;
@@ -54,8 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
             cb(approveTransactions);
         });
     }
-
-    init();
 });
 
 
