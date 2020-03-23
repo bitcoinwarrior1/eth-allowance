@@ -55,7 +55,7 @@ $(() => {
             getApproveTransactions(query, (txs) => {
                 // display the logic
                 console.log(txs);
-                buildResults(txs, account);
+                buildResults(chainId, txs, account);
             });
         }).catch((err) => {
             throw err;
@@ -74,6 +74,21 @@ $(() => {
                 return "https://kovan.etherscan.io/api?module=account&action=txlist&address=" + address;
             default:
                 return "https://api.etherscan.io/api?module=account&action=txlist&address=" + address;
+        }
+    }
+
+    function getEtherScanPage(chainId) {
+        switch (chainId) {
+            case "1":
+                return "https://etherscan.io/address/";
+            case "3":
+                return "https://ropsten.etherscan.io/address/";
+            case "4":
+                return "https://rinkeby.etherscan.io/address/";
+            case "42":
+                return "https://kovan.etherscan.io/address/";
+            default:
+                return "https://etherscan.io/address/";
         }
     }
 
@@ -108,13 +123,14 @@ $(() => {
         });
     }
 
-    function buildResults(txs, account) {
+    function buildResults(chainId, txs, account) {
+        let etherscanURL = getEtherScanPage(chainId);
         let parentElement = $('#results');
         for(let index in txs) {
             parentElement.append(`
                 <div class="grid-container">
-                    <div class="grid-items">${txs[index].contract}</div>
-                    <div class="grid-items">${txs[index].approved}</div>
+                    <div class="grid-items"><a href=${etherscanURL + txs[index].contract}>${txs[index].contract}</a></div>
+                    <div class="grid-items"><a href=${etherscanURL + txs[index].contract}>${txs[index].approved}</a></div>
                     <div class="grid-items">${txs[index].allowance}<button class="btn btn-primary" id="revoke${index}"> Revoke</button></div>
                 </div>
                 `);
