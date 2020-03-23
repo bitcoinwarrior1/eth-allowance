@@ -37,6 +37,14 @@ $(() => {
 
     web3.eth.requestAccounts().then((accounts) => {
         init(accounts[0]);
+    }).catch((err) => {
+        console.log(err);
+        // some web3 objects don't have requestAccounts
+        ethereum.enable().then((accounts) => {
+            init(accounts[0]);
+        }).catch((err) => {
+            alert(e + err);
+        });
     });
 
     function init(account) {
@@ -113,9 +121,9 @@ $(() => {
             // set the contract and make an approve transaction with a zero allowance
             let contract = new web3.eth.Contract(approvalABI, tx.contract);
             contract.methods.approve(tx.approved, 0).send({ from: account }).then((receipt) => {
-                alert("revoked: " + receipt);
+                console.log("revoked: " + JSON.stringify(receipt));
             }).catch((err) => {
-                alert("failed: " + err);
+                console.log("failed: " + JSON.stringify(err));
             });
         });
     }
