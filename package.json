@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "browserify index.js > bundle.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,8 @@
   "dependencies": {
     "superagent": "^5.2.2",
     "web3": "^1.2.6"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.0"
   }
 }
