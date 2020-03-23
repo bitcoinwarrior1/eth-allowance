@@ -46,7 +46,7 @@ $(() => {
             getApproveTransactions(query, (txs) => {
                 // display the logic
                 console.log(txs);
-                buildResults(txs);
+                buildResults(txs, account);
             });
         }).catch((err) => {
             throw err;
@@ -93,25 +93,25 @@ $(() => {
         });
     }
 
-    function buildResults(txs) {
+    function buildResults(txs, account) {
         let parentElement = $('#results');
         for(let index in txs) {
             parentElement.append(`
                 <div class="grid-container">
                     <div class="grid-items">${txs[index].contract}</div>
                     <div class="grid-items">${txs[index].approved}</div>
-                    <div class="grid-items">${txs[index].allowance}<button class="btn btn-primary" id="revoke${index}">Revoke</button></div>
+                    <div class="grid-items">${txs[index].allowance}<button class="btn btn-primary" id="revoke${index}"> Revoke</button></div>
                 </div>
                 `);
-            setRevokeButtonClick(txs[index], "#revoke" + index);
+            setRevokeButtonClick(txs[index], "#revoke" + index, account);
         }
     }
 
-    function setRevokeButtonClick(tx, id) {
+    function setRevokeButtonClick(tx, id, account) {
         $(id).click(() => {
             // set the contract and make an approve transaction with a zero allowance
             let contract = new web3.eth.Contract(approvalABI, tx.contract);
-            contract.methods.approve(tx.approved, 0).send().then((receipt) => {
+            contract.methods.approve(tx.approved, 0).send({ from: account }).then((receipt) => {
                 alert("revoked: " + receipt);
             }).catch((err) => {
                 alert("failed: " + err);
