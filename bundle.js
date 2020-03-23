@@ -52,11 +52,15 @@ $(() => {
             return chainId;
         }).then((chainId) => {
             let query = getQuery(chainId, account);
-            getApproveTransactions(query, (txs) => {
-                // display the logic
-                console.log(txs);
-                buildResults(chainId, txs, account);
-            });
+            if(query === "") {
+                alert("Current network not supported");
+            } else {
+                getApproveTransactions(query, (txs) => {
+                    // display the logic
+                    console.log(txs);
+                    buildResults(chainId, txs, account);
+                });
+            }
         }).catch((err) => {
             throw err;
         });
@@ -73,7 +77,7 @@ $(() => {
             case 42:
                 return "https://kovan.etherscan.io/api?module=account&action=txlist&address=" + address;
             default:
-                return "https://api.etherscan.io/api?module=account&action=txlist&address=" + address;
+                return "";
         }
     }
 
@@ -88,7 +92,7 @@ $(() => {
             case 42:
                 return "https://kovan.etherscan.io/address/";
             default:
-                return "https://etherscan.io/address/";
+                return "";
         }
     }
 
