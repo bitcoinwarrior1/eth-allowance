@@ -64,13 +64,13 @@ $(() => {
 
     function getQuery(chainId, address) {
         switch (chainId) {
-            case "1":
+            case 1:
                 return "https://api.etherscan.io/api?module=account&action=txlist&address=" + address;
-            case "3":
+            case 3:
                 return "https://ropsten.etherscan.io/api?module=account&action=txlist&address=" + address;
-            case "4":
+            case 4:
                 return "https://rinkeby.etherscan.io/api?module=account&action=txlist&address=" + address;
-            case "42":
+            case 42:
                 return "https://kovan.etherscan.io/api?module=account&action=txlist&address=" + address;
             default:
                 return "https://api.etherscan.io/api?module=account&action=txlist&address=" + address;
@@ -79,13 +79,13 @@ $(() => {
 
     function getEtherScanPage(chainId) {
         switch (chainId) {
-            case "1":
+            case 1:
                 return "https://etherscan.io/address/";
-            case "3":
+            case 3:
                 return "https://ropsten.etherscan.io/address/";
-            case "4":
+            case 4:
                 return "https://rinkeby.etherscan.io/address/";
-            case "42":
+            case 42:
                 return "https://kovan.etherscan.io/address/";
             default:
                 return "https://etherscan.io/address/";
