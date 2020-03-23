@@ -2,6 +2,34 @@ let Web3 = require('web3');
 let web3 = new Web3(Web3.givenProvider);
 let request = require('superagent');
 const approvalHash = "0x095ea7b3";
+const approvalABI = [
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "spender",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tokens",
+                "type": "uint256"
+            }
+        ],
+        "name": "approve",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "success",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+];
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -17,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             getApproveTransactions(query, (txs) => {
                 // display the logic
                 console.log(txs);
-                document.getElementById("txs").innerHTML = txs;
+                buildResults(txs);
             });
         }).catch((err) => {
             throw err;
@@ -57,5 +85,39 @@ document.addEventListener("DOMContentLoaded", () => {
             cb(approveTransactions);
         });
     }
+
+
+    // <div class="grid-container">
+    //     <div class="grid-items">0xEdd6D7ba0FF9f4bC501a12529cb736CA76A4fe7e</div>
+    //     <div class="grid-items">0xEdd6D7ba0FF9f4bC501a12529cb736CA76A4fe7e</div>
+    //     <div class="grid-items">Unlimited <button class="btn btn-warning">Revoke</button></div>
+    // </div>
+
+    function buildResults(txs) {
+        let parentElement = document.getElementById("results");
+        for(let index in txs) {
+            parentElement.append(`
+                <div class="grid-container">
+                    <div class="grid-item">${txs[index].contract}</div>
+                    <div class="grid-item">${txs[index].approved}</div>
+                    <div class="grid-item">${txs[index].allowance}<button id="revoke${index}"</button></div>
+                </div>
+                `);
+            setRevokeButtonClick(txs[index], "revoke" + index);
+        }
+    }
+
+    function setRevokeButtonClick(tx, id) {
+        document.getElementById(id).onclick((ev) => {
+            // set the contract and make an approve transaction with a zero allowance
+            let contract = new web3.eth.Contract(approvalABI, tx.contract);
+            contract.methods.approve([tx.approved, 0]).send().then((receipt) => {
+                alert("revoked: " + receipt);
+            }).catch((err) => {
+                alert("failed: " + err);
+            });
+        });
+    }
+
 });
 
