@@ -133,7 +133,7 @@ $(() => {
             parentElement.append(`
                 <div class="grid-container">
                     <div class="grid-items"><a href=${etherscanURL + txs[index].contract}>${txs[index].contract}</a></div>
-                    <div class="grid-items"><a href=${etherscanURL + txs[index].contract}>${txs[index].approved}</a></div>
+                    <div class="grid-items"><a href=${etherscanURL + txs[index].approved}>${txs[index].approved}</a></div>
                     <div class="grid-items">${txs[index].allowance}<button class="btn btn-primary" id="revoke${index}"> Revoke</button></div>
                 </div>
                 `);
