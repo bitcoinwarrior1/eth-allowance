@@ -221,14 +221,17 @@ const ERC20ABI = [
         "type": "event"
     }
 ];
-module.exports = { ERC20ABI }
+
+const ERC721ABI = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"_name","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"name":"_approved","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"approve","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"implementsERC721","outputs":[{"name":"_implementsERC721","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"_totalSupply","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_index","type":"uint256"}],"name":"tokenOfOwnerByIndex","outputs":[{"name":"_tokenId","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"name":"_owner","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"tokenMetadata","outputs":[{"name":"_infoUrl","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"_balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"},{"name":"_tokenId","type":"uint256"},{"name":"_approvedAddress","type":"address"},{"name":"_metadata","type":"string"}],"name":"mint","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"_symbol","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"transfer","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"numTokensTotal","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"getOwnerTokens","outputs":[{"name":"_tokenIds","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_to","type":"address"},{"indexed":true,"name":"_tokenId","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_approved","type":"address"},{"indexed":false,"name":"_tokenId","type":"uint256"}],"name":"Approval","type":"event"}];
+
+module.exports = { ERC20ABI, ERC721ABI }
 },{}],2:[function(require,module,exports){
 let Web3 = require('web3');
 let web3 = new Web3(Web3.givenProvider);
 let request = require('superagent');
 const approvalHash = "0x095ea7b3";
 const unlimitedAllowance = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-const { ERC20ABI } = require("./ABI.js");
+const { ERC20ABI, ERC721ABI } = require("./ABI.js");
 
 $(() => {
 
@@ -309,6 +312,7 @@ $(() => {
                         approveObj.allowance = "unlimited";
                     } else {
                         approveObj.allowance = "some";
+                        approveObj.allowanceUnEdited = allowance;
                     }
                     if(parseInt(allowance, 16) !== 0) {
                         approveTransactions.push(approveObj);
@@ -359,12 +363,35 @@ $(() => {
         $(id).click(() => {
             // set the contract and make an approve transaction with a zero allowance
             let contract = new web3.eth.Contract(ERC20ABI, tx.contract);
-            contract.methods.approve(tx.approved, 0).send({ from: account }).then((receipt) => {
-                console.log("revoked: " + JSON.stringify(receipt));
-            }).catch((err) => {
-                console.log("failed: " + JSON.stringify(err));
-            });
+            is721(contract, tx.allowanceUnEdited).then((result) => {
+                if(result) {
+                    //revoke erc721 by nulling the address
+                    contract.methods.approve(0, tx.allowanceUnEdited).send({ from: account }).then((receipt) => {
+                        console.log("revoked: " + JSON.stringify(receipt));
+                    }).catch((err) => {
+                        console.log("failed: " + JSON.stringify(err));
+                    });
+                } else {
+                    // revoke erc20 by nulling approval amount
+                    contract.methods.approve(tx.approved, 0).send({ from: account }).then((receipt) => {
+                        console.log("revoked: " + JSON.stringify(receipt));
+                    }).catch((err) => {
+                        console.log("failed: " + JSON.stringify(err));
+                    });
+                }
+            })
         });
+    }
+
+    async function is721(contractAddress, tokenId) {
+        let contract = new web3.eth.Contract(ERC721ABI, contractAddress);
+        try {
+            const _ = await contract.methods.ownerOf(tokenId).call();
+            return true; // if this call passes, it must be ERC721
+        } catch (e) {
+            // method doesn't exist, can't be 721
+            return false;
+        }
     }
 
 });

@@ -3,7 +3,7 @@ let web3 = new Web3(Web3.givenProvider);
 let request = require('superagent');
 const approvalHash = "0x095ea7b3";
 const unlimitedAllowance = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-const { ERC20ABI } = require("./ABI.js");
+const { ERC20ABI, ERC721ABI } = require("./ABI.js");
 
 $(() => {
 
@@ -84,6 +84,7 @@ $(() => {
                         approveObj.allowance = "unlimited";
                     } else {
                         approveObj.allowance = "some";
+                        approveObj.allowanceUnEdited = allowance;
                     }
                     if(parseInt(allowance, 16) !== 0) {
                         approveTransactions.push(approveObj);
@@ -134,12 +135,35 @@ $(() => {
         $(id).click(() => {
             // set the contract and make an approve transaction with a zero allowance
             let contract = new web3.eth.Contract(ERC20ABI, tx.contract);
-            contract.methods.approve(tx.approved, 0).send({ from: account }).then((receipt) => {
-                console.log("revoked: " + JSON.stringify(receipt));
-            }).catch((err) => {
-                console.log("failed: " + JSON.stringify(err));
-            });
+            is721(contract, tx.allowanceUnEdited).then((result) => {
+                if(result) {
+                    //revoke erc721 by nulling the address
+                    contract.methods.approve(0, tx.allowanceUnEdited).send({ from: account }).then((receipt) => {
+                        console.log("revoked: " + JSON.stringify(receipt));
+                    }).catch((err) => {
+                        console.log("failed: " + JSON.stringify(err));
+                    });
+                } else {
+                    // revoke erc20 by nulling approval amount
+                    contract.methods.approve(tx.approved, 0).send({ from: account }).then((receipt) => {
+                        console.log("revoked: " + JSON.stringify(receipt));
+                    }).catch((err) => {
+                        console.log("failed: " + JSON.stringify(err));
+                    });
+                }
+            })
         });
+    }
+
+    async function is721(contractAddress, tokenId) {
+        let contract = new web3.eth.Contract(ERC721ABI, contractAddress);
+        try {
+            const _ = await contract.methods.ownerOf(tokenId).call();
+            return true; // if this call passes, it must be ERC721
+        } catch (e) {
+            // method doesn't exist, can't be 721
+            return false;
+        }
     }
 
 });
