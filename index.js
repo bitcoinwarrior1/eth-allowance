@@ -4,6 +4,7 @@ let request = require('superagent');
 const approvalHash = "0x095ea7b3";
 const unlimitedAllowance = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 const { ERC20ABI, ERC721ABI } = require("./ABI.js");
+const dapps = require("./dapps");
 
 $(() => {
 
@@ -123,12 +124,33 @@ $(() => {
                     <div class="grid-items"><a href=${etherscanURL + txs[index].contract}>${contractName}</a></div>
                     <div class="grid-items"><a href=${etherscanURL + txs[index].approved}>${approvedName}</a></div>
                     <div class="grid-items">${txs[index].allowance}</div>
-                    <div class="grid-items"><button class="btn btn-primary" id="revoke${index}"> Revoke</button></div>
+                    <div class="grid-items">
+                        <button class="btn btn-danger" id="revoke${index}"> Revoke</button> 
+                        <button class="btn btn-primary" id="website${index}"> Visit dApp</button>
+                    </div>
                 </div>
                 `);
             setRevokeButtonClick(txs[index], "#revoke" + index, account);
+            visitDappOnClick("#website" + index, approvedName);
         }
         $("#loading").hide();
+    }
+
+    function visitDappOnClick(id, name) {
+        const dappsKeys = Object.keys(dapps);
+        let url = "";
+        dappsKeys.map((key) => {
+            if(name.toLowerCase().includes(key)) {
+                url = dapps[key];
+            }
+        });
+        if(url !== "") {
+            $(id).click(() => {
+                window.open(url);
+            });
+        } else {
+            $(id).hide();
+        }
     }
 
     function setRevokeButtonClick(tx, id, account) {
