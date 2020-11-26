@@ -3,34 +3,7 @@ let web3 = new Web3(Web3.givenProvider);
 let request = require('superagent');
 const approvalHash = "0x095ea7b3";
 const unlimitedAllowance = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-const approvalABI = [
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "spender",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "tokens",
-                "type": "uint256"
-            }
-        ],
-        "name": "approve",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "success",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }
-];
+const { ERC20ABI } = require("./ABI.js");
 
 $(() => {
 
@@ -42,7 +15,7 @@ $(() => {
         ethereum.enable().then((accounts) => {
             init(accounts[0]);
         }).catch((err) => {
-            alert(e + err);
+            alert(err);
         });
     });
 
@@ -57,7 +30,7 @@ $(() => {
                 getApproveTransactions(query, (txs) => {
                     // display the logic
                     console.log(txs);
-                    buildResults(chainId, txs, account);
+                    const _ = buildResults(chainId, txs, account);
                 });
             }
         }).catch((err) => {
@@ -126,15 +99,29 @@ $(() => {
         });
     }
 
-    function buildResults(chainId, txs, account) {
-        let etherscanURL = getEtherScanPage(chainId);
-        let parentElement = $('#results');
-        for(let index in txs) {
+    async function getName(contractAddress) {
+        try {
+            let contract = new web3.eth.Contract(ERC20ABI, contractAddress);
+            return await contract.methods.name().call();
+        } catch(e) {
+            // name not found, just use contract address
+            console.error(e);
+            return contractAddress;
+        }
+    }
+
+    async function buildResults(chainId, txs, account) {
+        const etherscanURL = getEtherScanPage(chainId);
+        const parentElement = $('#results');
+        for(const index in txs) {
+            let contractName = await getName(txs[index].contract);
+            let approvedName = await getName(txs[index].approved);
             parentElement.append(`
                 <div class="grid-container">
-                    <div class="grid-items"><a href=${etherscanURL + txs[index].contract}>${txs[index].contract}</a></div>
-                    <div class="grid-items"><a href=${etherscanURL + txs[index].approved}>${txs[index].approved}</a></div>
-                    <div class="grid-items">${txs[index].allowance}<button class="btn btn-primary" id="revoke${index}"> Revoke</button></div>
+                    <div class="grid-items"><a href=${etherscanURL + txs[index].contract}>${contractName}</a></div>
+                    <div class="grid-items"><a href=${etherscanURL + txs[index].approved}>${approvedName}</a></div>
+                    <div class="grid-items">${txs[index].allowance}</div>
+                    <div class="grid-items"><button class="btn btn-primary" id="revoke${index}"> Revoke</button></div>
                 </div>
                 `);
             setRevokeButtonClick(txs[index], "#revoke" + index, account);
@@ -144,7 +131,7 @@ $(() => {
     function setRevokeButtonClick(tx, id, account) {
         $(id).click(() => {
             // set the contract and make an approve transaction with a zero allowance
-            let contract = new web3.eth.Contract(approvalABI, tx.contract);
+            let contract = new web3.eth.Contract(ERC20ABI, tx.contract);
             contract.methods.approve(tx.approved, 0).send({ from: account }).then((receipt) => {
                 console.log("revoked: " + JSON.stringify(receipt));
             }).catch((err) => {

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "browserify index.js > bundle.js"
+    "build": "watchify index.js -o bundle.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,9 @@
   "homepage": "https://github.com/James-Sangalli/eth-allowance#readme",
   "dependencies": {
     "superagent": "^5.2.2",
-    "web3": "^1.2.6"
+    "web3": "1.2.6"
   },
   "devDependencies": {
-    "browserify": "^16.5.0"
+    "watchify": "^3.9.0"
   }
 }
