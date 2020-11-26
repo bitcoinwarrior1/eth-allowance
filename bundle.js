@@ -245,6 +245,7 @@ $(() => {
     });
 
     function init(account) {
+        $("#loading").show();
         web3.eth.getChainId().then((chainId) => {
             return chainId;
         }).then((chainId) => {
@@ -351,6 +352,7 @@ $(() => {
                 `);
             setRevokeButtonClick(txs[index], "#revoke" + index, account);
         }
+        $("#loading").hide();
     }
 
     function setRevokeButtonClick(tx, id, account) {
