@@ -1,7 +1,7 @@
 # eth-allowance
 Find & revoke all the addresses that can spend your tokens
 
-## how it works
+## How it works
 This tool works by searching all your transactions on the Ethereum blockchain to find the approval transactions; from there you are then able to revoke each one or even visit their dapp (if available).
 
 ## Add your dapp to the list
