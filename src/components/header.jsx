@@ -3,6 +3,13 @@ import '../App.css';
 
 class header extends Component {
 
+    revokeAll = () => {
+        let buttons = document.getElementsByName('revoke');
+        for(let button of buttons) {
+            button.click();
+        }
+    }
+
     render() {
         return (
             <div>
@@ -19,6 +26,16 @@ class header extends Component {
                         <div className="grid-item">Approved Address</div>
                         <div className="grid-item">Allowance</div>
                         <div className="grid-item">Action</div>
+                    </div>
+                    <div id="revokeAll" hidden>
+                        <div className="grid-container">
+                            <div className="grid-items">ALL</div>
+                            <div className="grid-items">ALL</div>
+                            <div className="grid-items">ALL</div>
+                            <div className="grid-items">
+                                <button className="btn btn-danger" onClick={ this.revokeAll }> Revoke All Allowances</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

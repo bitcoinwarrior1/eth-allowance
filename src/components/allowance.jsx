@@ -64,7 +64,7 @@ class allowance extends Component {
                     <div className="grid-items"><a href={this.props.tx.etherscanURL + this.props.tx.approved}>{this.props.tx.approvedName}</a></div>
                     <div className="grid-items">{this.props.tx.allowance}</div>
                     <div className="grid-items">
-                        <button className="btn btn-danger" onClick={() => { this.setRevokeClick() } }> Revoke</button>
+                        <button className="btn btn-danger" name="revoke" onClick={() => { this.setRevokeClick() } }> Revoke</button>
                         {this.getDappButton()}
                     </div>
                 </div>
