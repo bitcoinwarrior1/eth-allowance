@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/eth-allowance/static/css/main.a4c147a9.chunk.css",
+    "main.js": "/eth-allowance/static/js/main.4844b1ac.chunk.js",
+    "main.js.map": "/eth-allowance/static/js/main.4844b1ac.chunk.js.map",
+    "runtime-main.js": "/eth-allowance/static/js/runtime-main.706d160c.js",
+    "runtime-main.js.map": "/eth-allowance/static/js/runtime-main.706d160c.js.map",
+    "static/css/2.ee0da908.chunk.css": "/eth-allowance/static/css/2.ee0da908.chunk.css",
+    "static/js/2.595e60ae.chunk.js": "/eth-allowance/static/js/2.595e60ae.chunk.js",
+    "static/js/2.595e60ae.chunk.js.map": "/eth-allowance/static/js/2.595e60ae.chunk.js.map",
+    "static/js/3.947538b9.chunk.js": "/eth-allowance/static/js/3.947538b9.chunk.js",
+    "static/js/3.947538b9.chunk.js.map": "/eth-allowance/static/js/3.947538b9.chunk.js.map",
+    "index.html": "/eth-allowance/index.html",
+    "static/css/2.ee0da908.chunk.css.map": "/eth-allowance/static/css/2.ee0da908.chunk.css.map",
+    "static/css/main.a4c147a9.chunk.css.map": "/eth-allowance/static/css/main.a4c147a9.chunk.css.map",
+    "static/js/2.595e60ae.chunk.js.LICENSE.txt": "/eth-allowance/static/js/2.595e60ae.chunk.js.LICENSE.txt",
+    "static/media/bootstrap.css": "/eth-allowance/static/media/glyphicons-halflings-regular.be810be3.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.706d160c.js",
+    "static/css/2.ee0da908.chunk.css",
+    "static/js/2.595e60ae.chunk.js",
+    "static/css/main.a4c147a9.chunk.css",
+    "static/js/main.4844b1ac.chunk.js"
+  ]
+}
