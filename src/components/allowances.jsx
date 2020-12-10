@@ -20,14 +20,13 @@ class allowances extends Component {
             this.setState(obj);
             document.getElementById("loading").hidden = true;
         }).catch((err) => {
-            console.log("failed here ", err)
-            document.getElementById("loading").innerText = "error! " + err;
+            document.getElementById("loading").innerText = err;
         });
     }
 
     async init() {
+        let account = null;
         try {
-            let account = null;
             try {
                 const accounts = await this.props.web3.eth.requestAccounts();
                 account = accounts[0];
@@ -49,7 +48,8 @@ class allowances extends Component {
                 account: account
             };
         } catch (e) {
-            console.error(e);
+            document.getElementById("loading").hidden = false;
+            document.getElementById("loading").innerText = e;
         }
     }
 
