@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getQuery, getApproveTransactions, getName } from "../helpers/helpers";
+import { getQuery, getApproveTransactions, getName, getEtherScanPage } from "../helpers/helpers";
 import Allowance from "./allowance";
 
 class allowances extends Component {
@@ -35,10 +35,9 @@ class allowances extends Component {
                 const accounts = await window.ethereum.enable();
                 account = accounts[0];
             }
-            console.log(account);
             const chainId = await this.props.web3.eth.getChainId();
+            this.setState({ chainId: chainId });
             const query = getQuery(chainId, account);
-            console.log(query)
             const txs = await getApproveTransactions(query);
             for(const index in txs) {
                 txs[index].contractName = await getName(txs[index].contract);
@@ -56,10 +55,10 @@ class allowances extends Component {
 
     render() {
         let elements = "";
-        console.log("txs: ", this.state.txs)
-        if(this.state.txs !== undefined) {
+        if(this.state.txs !== undefined && this.state.chainId !== undefined) {
+            const etherscanUrl = getEtherScanPage(this.state.chainId);
             elements = this.state.txs.map((tx) => {
-                return <Allowance tx={tx} web3={this.props.web3} id={tx.contract} account={this.state.account}/>
+                return <Allowance etherscanURL={etherscanUrl} tx={tx} web3={this.props.web3} id={tx.contract} account={this.state.account}/>
             });
         }
         return (
