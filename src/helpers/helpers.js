@@ -15,6 +15,8 @@ export function getQuery(chainId, address) {
             return "https://rinkeby.etherscan.io/api?module=account&action=txlist&address=" + address;
         case 42:
             return "https://kovan.etherscan.io/api?module=account&action=txlist&address=" + address;
+        case 56:
+            return "https://api.bscscan.com/api?module=account&action=txlist&address=" + address;
         default:
             return "";
     }
@@ -30,6 +32,8 @@ export function getEtherScanPage(chainId) {
             return "https://rinkeby.etherscan.io/address/";
         case 42:
             return "https://kovan.etherscan.io/address/";
+        case 56:
+            return "https://bscscan.com/address/";
         default:
             return "";
     }
