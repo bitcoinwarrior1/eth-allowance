@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { is721 } from "../helpers/helpers";
 import dapps from "../helpers/dapps";
 import { ERC20ABI } from "../helpers/ABI";
+import textBoxMedium from "../images/TEXTBOX_MEDIUM.png";
+import revokeFull from "../images/REVOKE_FULL_SIZE_NEON.png"
+import dappButtonV2 from "../images/DAPP_Button_vers2.png";
 
 class allowance extends Component {
 
@@ -50,23 +53,51 @@ class allowance extends Component {
     getDappButton() {
         const dappUrl = this.dappURL();
         if(dappUrl !== "") {
-            return <button className="btn btn-primary" onClick={() => { window.open(dappUrl) } } id={this.props.id}> Visit dApp</button>;
+            return <div className="container">
+                <img className="container" src={dappButtonV2} alt=""/>
+                <div className="centered-white"><a onClick={() => { window.open(dappUrl) } }>Visit dApp</a></div>
+            </div>;
         } else {
-            return null;
+            return <div className="container">
+                <img className="container" src={dappButtonV2} alt=""/>
+                <div className="centered-white"><a onClick={() => { window.open("https://github.com/James-Sangalli/eth-allowance/blob/master/src/helpers/dapps.js"); } }>Add dApp</a></div>
+            </div>;
         }
+    }
+
+    truncateName(name) {
+        if(name.length > 20) {
+            return name.substring(0, 17) + '...'
+        }
+
+        return name;
     }
 
     render() {
         return (
             <div>
-                <div className="grid-container">
-                    <div className="grid-items"><a href={this.props.etherscanURL + this.props.tx.contract}>{this.props.tx.contractName}</a></div>
-                    <div className="grid-items"><a href={this.props.etherscanURL + this.props.tx.approved}>{this.props.tx.approvedName}</a></div>
-                    <div className="grid-items">{this.props.tx.allowance}</div>
-                    <div className="grid-items">
-                        <button className="btn btn-danger" name="revoke" onClick={() => { this.setRevokeClick() } }> Revoke</button>
-                        {this.getDappButton()}
+                <div className="allowance">
+
+                    <div className="container">
+                        <img className="container" src={textBoxMedium} alt=""/>
+                        <div className="centered"><a href={this.props.etherscanURL + this.props.tx.contract}>{this.truncateName(this.props.tx.contractName)}</a></div>
                     </div>
+
+                    <div className="container">
+                        <img className="container" src={textBoxMedium} alt=""/>
+                        <div className="centered"><a href={this.props.etherscanURL + this.props.tx.approved}>{this.truncateName(this.props.tx.approvedName)}</a></div>
+                    </div>
+
+                    <div className="container">
+                        <img className="container" src={textBoxMedium} alt=""/>
+                        <div className="centered">{this.props.tx.allowance}</div>
+                    </div>
+
+                    <div className="container">
+                        <img className="container" src={revokeFull} alt=""/>
+                        <div className="centered-white"><a name="revoke" id="revokeLink" onClick={this.setRevokeClick}>Revoke</a></div>
+                    </div>
+                    {this.getDappButton()}
                 </div>
             </div>
         )

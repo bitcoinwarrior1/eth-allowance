@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
+import textBoxMedium from "../images/TEXTBOX_MEDIUM.png";
+import revokeFullSpecial from "../images/REVOKE_Button_vers2.png";
 
 class header extends Component {
 
@@ -13,34 +15,51 @@ class header extends Component {
     render() {
         return (
             <div>
-                <div className="jumbotron">
+                <div  className="jumbotron">
                     <div id="titles">
-                        <h1>ETH Allowance</h1>
-                        <h2>Find & revoke all the addresses that can spend your tokens</h2>
+                        <h2>Find & revoke token allowances</h2>
                     </div>
                 </div>
-                <div id="gh">
-                    <a href="https://github.com/James-Sangalli/eth-allowance" target="_blank">
-                        <img alt="GitHub" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/2048px-Octicons-mark-github.svg.png" width="40" height="40"/>
-                    </a>
+                <div id="columns">
+                    <div id="headers">
+                        <div className="container">
+                            <div className="centered-white">CONTRACT</div>
+                        </div>
+                        <div className="container">
+                            <div className="centered-white">SPENDER</div>
+                        </div>
+                        <div className="container">
+                            <div className="centered-white">ALLOWANCE</div>
+                        </div>
+                        <div className="container">
+                            <div className="centered-white">ACTION</div>
+                        </div>
+                        <div className="container">
+                            <div className="centered-white">MISCELLANEOUS</div>
+                        </div>
+                    </div>
                 </div>
                 <h3 id="loading" hidden>Loading, please wait...</h3>
-                <div id="results">
-                    <div className="grid-container">
-                        <div className="grid-item">Contract</div>
-                        <div className="grid-item">Approved Address</div>
-                        <div className="grid-item">Allowance</div>
-                        <div className="grid-item">Action</div>
+                <div id="revokeAll">
+                    <div className="container">
+                        <img className="container" src={textBoxMedium} alt=""/>
+                        <div className="centered">ALL</div>
                     </div>
-                    <div id="revokeAll" hidden>
-                        <div className="grid-container">
-                            <div className="grid-items">ALL</div>
-                            <div className="grid-items">ALL</div>
-                            <div className="grid-items">ALL</div>
-                            <div className="grid-items">
-                                <button className="btn btn-danger" onClick={ this.revokeAll }> Revoke All Allowances</button>
-                            </div>
-                        </div>
+                    <div className="container">
+                        <img className="container" src={textBoxMedium} alt=""/>
+                        <div className="centered">ALL</div>
+                    </div>
+                    <div className="container">
+                        <img className="container" src={textBoxMedium} alt=""/>
+                        <div className="centered">ALL</div>
+                    </div>
+                    <div className="container" onClick={this.revokeAll}>
+                        <img className="container" src={revokeFullSpecial} alt=""/>
+                        <div className="centered-white"><a id="revokeLink" onClick={this.revokeAll}>Revoke All</a></div>
+                    </div>
+                    <div className="container">
+                        <img className="container" src={textBoxMedium} alt=""/>
+                        <div className="centered-white"><a onClick={() => { window.open("https://github.com/James-Sangalli/eth-allowance/issues") } }>Report issue</a></div>
                     </div>
                 </div>
             </div>
