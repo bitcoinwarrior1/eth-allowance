@@ -16,14 +16,17 @@ class allowance extends Component {
     }
 
     dappURL() {
+        if(dapps[this.props.tx.contractName.toLowerCase()] !== undefined) {
+            return dapps[this.props.tx.contractName.toLowerCase()];
+        }
         const dappsKeys = Object.keys(dapps);
-        let url = "";
         for(let key of dappsKeys) {
             if(this.props.tx.contractName.toLowerCase().includes(key)) {
-                url = dapps[key];
+                return dapps[key];
             }
         }
-        return url;
+
+        return "";
     }
 
     setRevokeClick() {
