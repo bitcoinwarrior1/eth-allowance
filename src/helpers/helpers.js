@@ -39,7 +39,35 @@ export function getEtherScanPage(chainId) {
     }
 }
 
+export async function getApproveTransactionsWithRPC() {
+    const userAddress = (await web3.eth.getAccounts())[0];
+    const approveLogs = await getApproveLogs(userAddress);
+}
+
+async function getApproveLogs(userAddress) {
+    const topics = [web3.utils.sha3('approve(address,uint256)'), userAddress, undefined];
+    // get tx history for the address
+    return web3.eth.getPastLogs({
+        fromBlock: '0x0',
+        toBlock: 'latest',
+        address: userAddress,
+        topics: topics
+    });
+}
+
+async function getAllowancesFromLogs(pastLogs) {
+    const approvals = [];
+    const spenders = [];
+    // latest first
+    for(let i = pastLogs.length - 1; i > 0; i++) {
+
+    }
+}
+
+
+
 export async function getApproveTransactions(query) {
+    const _ = await getApproveTransactionsWithRPC();
     try {
         let data = await request.get(query);
         let approveTransactions = [];
