@@ -10,11 +10,11 @@ export function getQuery(chainId, address) {
         case 1:
             return "https://api.etherscan.io/api?module=account&action=txlist&address=" + address;
         case 3:
-            return "https://ropsten.etherscan.io/api?module=account&action=txlist&address=" + address;
+            return "https://api-ropsten.etherscan.io/api?module=account&action=txlist&address=" + address;
         case 4:
-            return "https://rinkeby.etherscan.io/api?module=account&action=txlist&address=" + address;
+            return "https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=" + address;
         case 42:
-            return "https://kovan.etherscan.io/api?module=account&action=txlist&address=" + address;
+            return "https://api-kovan.etherscan.io/api?module=account&action=txlist&address=" + address;
         case 56:
             return "https://api.bscscan.com/api?module=account&action=txlist&address=" + address;
         default:
