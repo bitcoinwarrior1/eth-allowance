@@ -3,7 +3,7 @@
   color: white;
   margin-top: 10%;
   margin-left: 10%;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 @media screen and (min-width: 800px) {
@@ -15,7 +15,7 @@
     transform: translate(-50%, -50%);
     color: black;
     font-size: large;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
   }
 
   /* Centered text */
@@ -26,10 +26,8 @@
     transform: translate(-50%, -50%);
     color: white;
     font-size: large;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
   }
-
-
 }
 
 /* Container holding the image and the text */
@@ -57,7 +55,7 @@
 }
 
 #page {
-  margin:5%;
+  margin: 5%;
 }
 
 #results {
@@ -74,7 +72,7 @@ body {
   background: #262626;
 }
 
-.jumbotron{
+.jumbotron {
   background: url("./images/header-background.png") no-repeat center center;
   -webkit-background-size: 100% 100%;
   -moz-background-size: 100% 100%;
